@@ -21,7 +21,8 @@
     "mongodb": "^4.1.0",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.7",
-    "exceljs": "^4.3.0"
+    "exceljs": "^4.3.0",
+    "inversify": "^6.0.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
