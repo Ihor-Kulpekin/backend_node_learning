@@ -1,6 +1,6 @@
 import {injectable} from "inversify";
 import {IBaseRepository} from "./ibase.repository";
-import {MongoClient, Collection} from "mongodb";
+import {Collection, MongoClient} from "mongodb";
 
 @injectable()
 export class BaseRepository<T> implements IBaseRepository<T> {
@@ -20,12 +20,15 @@ export class BaseRepository<T> implements IBaseRepository<T> {
         await this.init();
 
         const filters = query.filters ? JSON.parse(query.filters) : {};
-        console.log('this.collection', this.collection);
         return this.collection?.find(filters, {limit: query.limit, skip: query.skip}).toArray();
     }
 
-    getOne(_id: string): Promise<any> {
-        return Promise.resolve(undefined);
+    public async getOne(_id: string): Promise<any> {
+        await this.init();
+
+        const filters = <any>{_id};
+
+        return this.collection?.findOne(filters);
     }
 
     protected async init(): Promise<void> {

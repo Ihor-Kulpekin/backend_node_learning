@@ -16,10 +16,14 @@ export class BmlsRepository extends BaseRepository<any> implements IBmlsReposito
         };
     }
 
+    public async getBml(id: string): Promise<any> {
+        return this.getOne(id);
+    }
+
     public async getSearchResults(query: any): Promise<any> {
         await this.init();
 
-        return this.collection?.find({
+        const bmls = await this.collection?.find({
             $or: [
                 {
                     hotel_name: {$regex: query.search_value, $options: 'i'}
@@ -32,5 +36,10 @@ export class BmlsRepository extends BaseRepository<any> implements IBmlsReposito
                 }
             ]
         }, {limit: 15, skip: 0}).toArray();
+
+        return bmls?.map((bml) => ({
+            id: bml._id,
+            text: bml.hotel_name
+        }));
     }
 }
