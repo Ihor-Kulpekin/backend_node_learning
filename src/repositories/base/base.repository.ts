@@ -28,7 +28,7 @@ export class BaseRepository<T> implements IBaseRepository<T> {
         return Promise.resolve(undefined);
     }
 
-    private async init(): Promise<void> {
+    protected async init(): Promise<void> {
         await this._connect();
     }
 

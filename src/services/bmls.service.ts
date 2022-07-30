@@ -11,4 +11,9 @@ export class BmlsService implements IBmlsService{
     public async getBmlsByQuery(query: any): Promise<any> {
         return this.bmlsRepository.getBmls(query);
     }
+
+    public async getSearchResults(query: any): Promise<any> {
+        console.log(1);
+        return this.bmlsRepository.getSearchResults(query)
+    }
 }

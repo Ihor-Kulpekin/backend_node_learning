@@ -15,4 +15,22 @@ export class BmlsRepository extends BaseRepository<any> implements IBmlsReposito
             totalCount
         };
     }
+
+    public async getSearchResults(query: any): Promise<any> {
+        await this.init();
+
+        return this.collection?.find({
+            $or: [
+                {
+                    hotel_name: {$regex: query.search_value, $options: 'i'}
+                },
+                {
+                    region: {$regex: query.search_value, $options: 'i'}
+                },
+                {
+                    city: {$regex: query.search_value, $options: 'i'}
+                }
+            ]
+        }, {limit: 15, skip: 0}).toArray();
+    }
 }

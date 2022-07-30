@@ -23,30 +23,12 @@ export class BmlsController {
 
 
     static async searchResults(ctx: Context): Promise<void> {
-        await MongoConnection.withDbHook(async (dB: Db) => {
-            const collection = await dB.collection('bmls');
-
-            const response = await collection.find({
-                $or: [
-                    {
-                        hotel_name: {$regex: ctx.query.search_value, $options: 'i'}
-                    },
-                    {
-                        region: {$regex: ctx.query.search_value, $options: 'i'}
-                    },
-                    {
-                        city: {$regex: ctx.query.search_value, $options: 'i'}
-                    }
-                ]
-            }, {limit: 15, skip: 0}).toArray();
-
-            const result = response.map((item: any) => ({
-                id: item._id,
-                text: item.hotel_name
-            }))
-
+        try {
+            const result = await BmlsController.bmlsService.getSearchResults(ctx.query);
             CommonUtil.makeResponse(ctx, result);
-        }, ctx)
+        }catch (error) {
+            CommonUtil.makeError(ctx, error)
+        }
     }
 
     static async download(ctx: Context): Promise<void> {
