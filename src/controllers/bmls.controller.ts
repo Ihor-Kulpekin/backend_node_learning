@@ -1,15 +1,12 @@
 import {CommonUtil} from "../util/common.util";
 import {Context} from "koa";
-import {Workbook} from 'exceljs';
-import {MongoConnection} from "../database/mongo.connection";
-import {Db} from "mongodb";
-import fs from "fs";
-import {Zip} from "../lib/zip.lib";
 import {container} from "../di-container/container";
-import {IBmlsService} from "../services/ibmls.service";
+import {IBmlsService} from "../services/bmls/ibmls.service";
+import {IRedisClientNew} from "../lib/redis/iredis.lib";
 
 export class BmlsController {
     private static bmlsService = container.get<IBmlsService>('BmlsService')
+    private static redisCache = container.get<IRedisClientNew>('RedisClient')
 
     static async getBmls(ctx: Context): Promise<void> {
         const result = await BmlsController.bmlsService.getBmlsByQuery(ctx.query);
@@ -31,7 +28,19 @@ export class BmlsController {
     }
 
     static async download(ctx: Context): Promise<void> {
-        const result = await BmlsController.bmlsService.download(ctx.query);
+        await BmlsController.redisCache.hset('csv', ctx.request.body.fileName, JSON.stringify({
+            status: 'In queue', progress: 0, fileName: ctx.request.body.fileName
+        }))
+
+        BmlsController.bmlsService.download({...ctx.request.body});
+
+        CommonUtil.makeResponse(ctx, 'ok')
+    }
+
+    static async getStatus(ctx: Context): Promise<void> {
+        const fileName: any = ctx.request.query.fileName ? ctx.request.query.fileName : '';
+
+        const result = await BmlsController.bmlsService.getStatus('csv', fileName);
 
         CommonUtil.makeResponse(ctx, result)
     }

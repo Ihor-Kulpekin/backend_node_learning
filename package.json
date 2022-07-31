@@ -20,6 +20,7 @@
     "koa-router": "^7.4.0",
     "mongodb": "^4.1.0",
     "reflect-metadata": "^0.1.13",
+    "redis": "^3.1.2",
     "typeorm": "^0.3.7",
     "exceljs": "^4.3.0",
     "inversify": "^6.0.1"
@@ -32,6 +33,7 @@
     "@types/koa-router": "^7.4.4",
     "@types/mongodb": "^4.0.7",
     "@types/node": "^16.7.1",
+    "@types/redis": "^4.0.11",
     "nodemon": "^2.0.12",
     "ts-loader": "^9.2.5",
     "ts-node": "^10.2.1",

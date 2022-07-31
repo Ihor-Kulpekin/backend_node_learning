@@ -22,5 +22,10 @@ export class BmlsRouter extends BaseRouter{
             '/download',
             BmlsController.download
         );
+
+        this.router.get(
+            '/status',
+            BmlsController.getStatus
+        );
     }
 }

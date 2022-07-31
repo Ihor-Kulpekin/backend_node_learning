@@ -20,7 +20,8 @@ export class BaseRepository<T> implements IBaseRepository<T> {
         await this.init();
 
         const filters = query.filters ? JSON.parse(query.filters) : {};
-        return this.collection?.find(filters, {limit: query.limit, skip: query.skip}).toArray();
+
+        return this.collection?.find(filters, {limit: Number(query.limit), skip: Number(query.skip)}).toArray();
     }
 
     public async getOne(_id: string): Promise<any> {
